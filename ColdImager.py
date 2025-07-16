@@ -4,6 +4,7 @@
 ## Includes serial numbers based on input.           ##
 #######################################################
 from PIL import Image, ImageDraw, ImageFont
+from datetime import datetime
 import sys
 
 # User passes Outer Tracker plank serial numbers #
@@ -11,6 +12,7 @@ id1 = sys.argv[1]
 id2 = sys.argv[2]
 
 # Program seeks out the images #
+date = datetime.now().strftime('%Y-%m-%d')
 ext = ".png"
 print("Loading Files...")
 img1 = Image.open(id1+ext)
@@ -19,10 +21,10 @@ img2 = Image.open(id2+ext)
 ###################################################################################################
 
 # Define function for stamping images #
-def StampImage(image,text):
+def StampImage(image,serial,side):
     stamp = ImageDraw.Draw(image)
     font = ImageFont.truetype("arial.ttf", 24)
-
+    text = serial + " " + side
     # Positioning #
     pos = (10,10)
     color = "white"
@@ -52,9 +54,9 @@ def CombineImages(img1,img2):
 ###################################################################################################
 
 # Start by stamping the images with the serial #
-Img1_Stamp = StampImage(img1.copy(),id1)
-Img2_Stamp = StampImage(img2.copy(),id2)
-combined_picture = CombineImages(Img1_Stamp,Img2_Stamp).save("Panel_" + id1 + "_" + id2 + ext)
+Img1_Stamp = StampImage(img1.copy(),id1,"Front")
+Img2_Stamp = StampImage(img2.copy(),id2,"Back")
+combined_picture = CombineImages(Img1_Stamp,Img2_Stamp).save("Panel_" + id1 + "_" + id2 + "_" + date + ext)
 print("Images combined!")
 
 
